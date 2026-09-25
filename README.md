@@ -7,7 +7,7 @@
 
 這是一份課程專題的成果整理，不是正式發表的論文；實驗規模與記錄方式都有其限制，詳見 [Reproducibility and Notes](#reproducibility-and-notes)。大三下學期的延伸專題見 [new_puzzle_2026](https://github.com/Michaelwu128/new_puzzle_2026)。
 
-**Abstract.** This repository contains my undergraduate research project (junior year, fall semester) on the *Untouchable 11* puzzle: placing 11 distinct cube-net pieces on a 9x17, 10x15, or 12x12 board so that no two pieces touch, not even at a corner. I encode the placement problem as SAT (DIMACS CNF) and compare three encodings: a placement-only encoding (Model A), a hybrid encoding with cell variables and channeling clauses (Model B), and Model B with a sequential-counter at-most-one constraint (Model C). On the 9x17 board, the number of clauses drops from about 7.2 million (A) to 1.9 million (B) and 123 thousand (C), and the CaDiCaL solving time drops from 7 to 3 to 1 minute. The 12x12 board was solved only with Model C plus a simple symmetry-breaking constraint (208 minutes); Models A and B found no solution within 24 hours.
+**Abstract.** This repository contains my undergraduate research project (junior year, fall semester) on the *Untouchable 11* puzzle: placing 11 distinct cube-net pieces on a 9x17, 10x15, or 12x12 board so that no two pieces touch, not even at a corner. I encode the problem as SAT (DIMACS CNF) and compare three encodings: placement variables only (Model A), added cell variables with channeling clauses (Model B), and Model B with a sequential-counter at-most-one constraint (Model C). On the 9x17 board, the clause count drops from about 7.2 million (A) to 123 thousand (C). On the 12x12 board, only Model C with a simple symmetry-breaking constraint found a solution (208 minutes); Models A and B found none within 24 hours.
 
 ---
 
@@ -15,7 +15,7 @@
 
 - **SAT 建模**：把「11 塊不同拼圖放進盤面、任兩塊不能接觸」的問題寫成 DIMACS CNF。以 Python 產生所有合法放置與子句，交給 SAT solver（主要為 CaDiCaL，部分使用 MiniSat）求解，再把輸出轉回盤面。
 - **逐步改善 encoding（Model A → B → C）**：Model A 只用 placement 變數；Model B 加入格子變數，把衝突限制移到「格子層」；Model C 再以 Sequential Counter 取代 pairwise 的 at-most-one。9x17 的子句數由約 720 萬降到約 12 萬。
-- **三種盤面都找到解**：9x17、10x15、12x12。最難的 12x12 只有在 Model C 加上對稱性破除時才解出（208 分鐘），Model A、B 超過 24 小時仍無解。
+- **三種盤面都找到解**：9x17、10x15、12x12。最難的 12x12 只有 Model C 加上對稱性破除在 24 小時內找到解（208 分鐘）；Model A、B 執行超過 24 小時仍未找到解，但這不代表無解。
 - **結果可檢查**：repo 附 7 組解答與驗證腳本，可以重新確認每組解都符合規則；專題當時的 9 支 generate 腳本重新執行後，產生的 CNF 與當初相同。
 
 ![7 組 SAT 解答的盤面，每種顏色代表一塊拼圖](docs/solutions.svg)
@@ -243,7 +243,7 @@ untouchable11-sat/
 
 - 9x17：隨著模型改進，求解時間由 7 min → 3 min → 1 min 逐步縮短。
 - 12x12：只有 Model C 解出；Model A、B 都超過 24 小時仍無解。
-- 10x15：Model C（25 min）反而比 Model B（4 min）慢。我推測這可能是 SAT solver 用 Model C 求解時「運氣」較差，但沒有進一步驗證。
+- 10x15：Model C（25 min）反而比 Model B（4 min）慢。原因可能是 encoding 本身，也可能是 SAT solver 搜尋路徑的差異加上只測一次所造成的變異；本專題沒有進一步驗證（見[限制](#限制)）。
 - 三種盤面都不只一個解，因此不同模型可能得到不同的放置方式。7 組解答的盤面見 [`docs/solution_grids.md`](docs/solution_grids.md)。
 
 ## Reproducibility and Notes
@@ -264,7 +264,7 @@ untouchable11-sat/
 
 ## Future Work
 
-- **改用頂點的映射模型**：G4G13 的一篇文章（Carl Hoff, [From Untouchable 11 to Hazmat Cargo](https://www.gathering4gardner.org/g4g13gift/puzzles/HoffCarl-GiftExchange-FromUntouchable11toHazmatCargo-G4G13.pdf)）提出，可以只看每塊拼圖周圍的頂點，把 12x12 的格子盤面改成 13x13 的點，規則從「拼圖不能接觸」變成「任兩塊拼圖的頂點不能重合」。依該文所述，作者用原本的方法花了 24 天才找到 12x12 的全部 7 個解，改用映射後不到 1 小時就全部找到。之後可以嘗試把這個映射寫成 SAT encoding，與本專題的模型比較。
+- **改用頂點的映射模型**：Carl Hoff 在 G4G13 的文章 [From Untouchable 11 to Hazmat Cargo](https://www.gathering4gardner.org/g4g13gift/puzzles/HoffCarl-GiftExchange-FromUntouchable11toHazmatCargo-G4G13.pdf) 中，把 12x12 的格子盤面改成 13x13 的頂點，規則變成「任兩塊拼圖的頂點不能重合」；依該文所述，找出全部 7 個解的時間因此從 24 天縮短到不到 1 小時。之後可以把這個映射寫成 SAT encoding，與本專題的模型比較。
 - **列舉所有解**：每解出一個解後，加入一個排除該解的子句再重新求解，直到 UNSAT，就能找出所有解。
 
 ## Follow-up Project
