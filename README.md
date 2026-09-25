@@ -242,7 +242,7 @@ untouchable11-sat/
 ### 觀察
 
 - 9x17：隨著模型改進，求解時間由 7 min → 3 min → 1 min 逐步縮短。
-- 12x12：只有 Model C 解出；Model A、B 都超過 24 小時仍無解。
+- 12x12：只有 Model C（加上對稱性破除）在 24 小時內找到解；Model A、B 執行超過 24 小時仍未找到解。
 - 10x15：Model C（25 min）反而比 Model B（4 min）慢。原因可能是 encoding 本身，也可能是 SAT solver 搜尋路徑的差異加上只測一次所造成的變異；本專題沒有進一步驗證（見[限制](#限制)）。
 - 三種盤面都不只一個解，因此不同模型可能得到不同的放置方式。7 組解答的盤面見 [`docs/solution_grids.md`](docs/solution_grids.md)。
 
