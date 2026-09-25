@@ -266,3 +266,7 @@ untouchable11-sat/
 
 - **改用頂點的映射模型**：G4G13 的一篇文章（Carl Hoff, [From Untouchable 11 to Hazmat Cargo](https://www.gathering4gardner.org/g4g13gift/puzzles/HoffCarl-GiftExchange-FromUntouchable11toHazmatCargo-G4G13.pdf)）提出，可以只看每塊拼圖周圍的頂點，把 12x12 的格子盤面改成 13x13 的點，規則從「拼圖不能接觸」變成「任兩塊拼圖的頂點不能重合」。依該文所述，作者用原本的方法花了 24 天才找到 12x12 的全部 7 個解，改用映射後不到 1 小時就全部找到。之後可以嘗試把這個映射寫成 SAT encoding，與本專題的模型比較。
 - **列舉所有解**：每解出一個解後，加入一個排除該解的子句再重新求解，直到 UNSAT，就能找出所有解。
+
+## Follow-up Project
+
+大三下我延續這個專題，以自己設計的 12×12 拼圖研究 dead-pocket 剪枝與 learning-guided pruning：[new_puzzle_2026](https://github.com/Michaelwu128/new_puzzle_2026)。
