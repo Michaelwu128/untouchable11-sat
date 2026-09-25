@@ -5,21 +5,18 @@
 
 本 repository 整理我在大三上學期的專題：將 **Untouchable 11** 拼圖的放置問題轉換為 SAT 問題（DIMACS CNF），並嘗試三種不同的 CNF encoding（Model A / B / C），觀察 encoding 方式對 SAT solver 求解效率的影響。
 
-這是一份課程專題的成果整理，不是正式發表的論文；實驗規模與記錄方式都有其限制，詳見 [Experimental Results](#experimental-results) 的說明。大三下學期另有延伸專題，不包含在本 repo 中。
+這是一份課程專題的成果整理，不是正式發表的論文；實驗規模與記錄方式都有其限制，詳見 [Reproducibility and Notes](#reproducibility-and-notes)。大三下學期的延伸專題見 [new_puzzle_2026](https://github.com/Michaelwu128/new_puzzle_2026)。
 
 **Abstract.** This repository contains my undergraduate research project (junior year, fall semester) on the *Untouchable 11* puzzle: placing 11 distinct cube-net pieces on a 9x17, 10x15, or 12x12 board so that no two pieces touch, not even at a corner. I encode the placement problem as SAT (DIMACS CNF) and compare three encodings: a placement-only encoding (Model A), a hybrid encoding with cell variables and channeling clauses (Model B), and Model B with a sequential-counter at-most-one constraint (Model C). On the 9x17 board, the number of clauses drops from about 7.2 million (A) to 1.9 million (B) and 123 thousand (C), and the CaDiCaL solving time drops from 7 to 3 to 1 minute. The 12x12 board was solved only with Model C plus a simple symmetry-breaking constraint (208 minutes); Models A and B found no solution within 24 hours.
 
 ---
 
-## Project Overview
+## Highlights
 
-- **問題**：把 11 塊互不相同的拼圖放進固定大小的盤面，且任兩塊拼圖不能接觸。
-- **方法**：以 Python 產生所有合法的拼圖放置（placement），將規則寫成 CNF 子句，交給 SAT solver（主要為 CaDiCaL，部分使用 MiniSat）求解，再把 solver 的輸出轉回盤面。
-- **重點**：比較三種 encoding：
-  - **Model A**：只用 placement 變數，衝突限制以 placement 兩兩配對表示。
-  - **Model B**：加入格子變數，把衝突限制移到「格子層」。
-  - **Model C**：在 Model B 的基礎上，以 Sequential Counter 取代 pairwise 的 at-most-one。
-- **結果**：三種盤面（9x17、10x15、12x12）都找到解。其中 12x12 只有在使用 Model C（並加上對稱性破除）時才在時限內解出。
+- **SAT 建模**：把「11 塊不同拼圖放進盤面、任兩塊不能接觸」的問題寫成 DIMACS CNF。以 Python 產生所有合法放置與子句，交給 SAT solver（主要為 CaDiCaL，部分使用 MiniSat）求解，再把輸出轉回盤面。
+- **逐步改善 encoding（Model A → B → C）**：Model A 只用 placement 變數；Model B 加入格子變數，把衝突限制移到「格子層」；Model C 再以 Sequential Counter 取代 pairwise 的 at-most-one。9x17 的子句數由約 720 萬降到約 12 萬。
+- **三種盤面都找到解**：9x17、10x15、12x12。最難的 12x12 只有在 Model C 加上對稱性破除時才解出（208 分鐘），Model A、B 超過 24 小時仍無解。
+- **結果可檢查**：repo 附 7 組解答與驗證腳本，可以重新確認每組解都符合規則；專題當時的 9 支 generate 腳本重新執行後，產生的 CNF 與當初相同。
 
 ![7 組 SAT 解答的盤面，每種顏色代表一塊拼圖](docs/solutions.svg)
 
@@ -249,6 +246,8 @@ untouchable11-sat/
 - 10x15：Model C（25 min）反而比 Model B（4 min）慢。我推測這可能是 SAT solver 用 Model C 求解時「運氣」較差，但沒有進一步驗證。
 - 三種盤面都不只一個解，因此不同模型可能得到不同的放置方式。7 組解答的盤面見 [`docs/solution_grids.md`](docs/solution_grids.md)。
 
+## Reproducibility and Notes
+
 ### 可驗證的部分
 
 - repo 中 7 組解答（9x17 A/B/C、10x15 A/B/C、12x12 C + symmetry breaking）都可以用對應的 show 腳本還原成盤面。
@@ -261,6 +260,7 @@ untouchable11-sat/
 - 沒有進行多次重複實驗或改變亂數種子，10x15 中 B、C 的時間差異無法判斷是 encoding 造成還是隨機性。
 - 12x12 未加對稱性破除的 Model C（`experiments/12x12/model_C/`）沒有留下求解結果。
 - 12x12 Model A 當時的腳本與 CNF 沒有保留下來。repo 中的 `experiments/12x12/model_A/generate_12x12_modelA.py` 是整理 repo 時由 10x15 版本補上的，只修改盤面大小；整理時沒有重新求解。
+- 期末報告投影片中 Sequential Counter 的第三組子句寫錯，以程式實作為準（見 [Sequential Counter Encoding](#sequential-counter-encoding)）。
 
 ## Future Work
 
