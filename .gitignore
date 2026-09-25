@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Office temporary files
+~$*
+
+# Generated CNF files (reproducible with generate_*.py; Model A is ~100 MB,
+# above GitHub's 100 MB file limit)
+*.cnf
+!examples/*.cnf
+
+# SAT solver proofs and logs (CaDiCaL writes a DRAT proof when given a second
+# positional argument; these reached 8-26 GB during the project)
+*.drat
+*.proof
+*.log
+solution_12x12.txt
+solution1212f.txt
+solution1212h2.txt
+solution1212final.txt
+
+# Ad-hoc solver output from re-running experiments
+my_solution*.txt
