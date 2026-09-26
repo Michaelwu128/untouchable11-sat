@@ -5,7 +5,7 @@
 
 本 repository 整理我在大三上學期的專題：將 **Untouchable 11** 拼圖的放置問題轉換為 SAT 問題（DIMACS CNF），並嘗試三種不同的 CNF encoding（Model A / B / C），觀察 encoding 方式對 SAT solver 求解效率的影響。
 
-這是一份課程專題的成果整理，不是正式發表的論文；實驗規模與記錄方式都有其限制，詳見 [Reproducibility and Notes](#reproducibility-and-notes)。大三下學期的延伸專題見 [new_puzzle_2026](https://github.com/Michaelwu128/new_puzzle_2026)。
+這是一份課程專題的成果整理，不是正式發表的論文；實驗規模與記錄方式都有其限制，詳見 [Reproducibility and Notes](#reproducibility-and-notes)。大三下學期的延伸專題見 [learned-dead-pocket-sat](https://github.com/Michaelwu128/learned-dead-pocket-sat)。
 
 **Abstract.** This repository contains my undergraduate research project (junior year, fall semester) on the *Untouchable 11* puzzle: placing 11 distinct cube-net pieces on a 9x17, 10x15, or 12x12 board so that no two pieces touch, not even at a corner. I encode the problem as SAT (DIMACS CNF) and compare three encodings: placement variables only (Model A), added cell variables with channeling clauses (Model B), and Model B with a sequential-counter at-most-one constraint (Model C). On the 9x17 board, the clause count drops from about 7.2 million (A) to 123 thousand (C). On the 12x12 board, only Model C with a simple symmetry-breaking constraint found a solution (208 minutes); Models A and B found none within 24 hours.
 
@@ -269,4 +269,4 @@ untouchable11-sat/
 
 ## Follow-up Project
 
-大三下我延續這個專題，以自己設計的 12×12 拼圖研究 dead-pocket 剪枝與 learning-guided pruning：[new_puzzle_2026](https://github.com/Michaelwu128/new_puzzle_2026)。
+大三下我延續這個專題，以自己設計的 12×12 拼圖研究 dead-pocket 剪枝與 learning-guided pruning：[learned-dead-pocket-sat](https://github.com/Michaelwu128/learned-dead-pocket-sat)。
